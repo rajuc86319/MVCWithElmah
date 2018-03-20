@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UsersRegistrationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="countries">
+    <Key>
+      <PropertyRef Name="countryId" />
+    </Key>
+    <Property Name="countryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="countryName" Type="varchar" MaxLength="15" />
+  </EntityType>
+  <EntityType Name="States">
+    <Key>
+      <PropertyRef Name="StateID" />
+    </Key>
+    <Property Name="StateID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StateNames" Type="varchar" MaxLength="30" />
+    <Property Name="CountryID" Type="int" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LastName" Type="varchar" MaxLength="255" />
+    <Property Name="MiddleName" Type="varchar" MaxLength="25" />
+    <Property Name="FirstName" Type="varchar" MaxLength="255" />
+    <Property Name="Country" Type="varchar" MaxLength="15" />
+    <Property Name="State" Type="varchar" MaxLength="25" />
+    <Property Name="EmailAddress" Type="nvarchar" MaxLength="25" />
+    <Property Name="Password" Type="varchar" MaxLength="25" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="15" />
+  </EntityType>
+  <Association Name="FK__States__CountryI__2A4B4B5E">
+    <End Role="countries" Type="Self.countries" Multiplicity="0..1" />
+    <End Role="States" Type="Self.States" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="countries">
+        <PropertyRef Name="countryId" />
+      </Principal>
+      <Dependent Role="States">
+        <PropertyRef Name="CountryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="UsersRegistrationModelStoreContainer">
+    <EntitySet Name="countries" EntityType="Self.countries" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="States" EntityType="Self.States" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__States__CountryI__2A4B4B5E" Association="Self.FK__States__CountryI__2A4B4B5E">
+      <End Role="countries" EntitySet="countries" />
+      <End Role="States" EntitySet="States" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

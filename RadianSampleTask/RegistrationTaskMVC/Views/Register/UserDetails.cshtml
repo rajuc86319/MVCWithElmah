@@ -1,0 +1,20 @@
+﻿@model RegistrationTaskMVC.Models.User
+@{
+	ViewBag.Title = "UserDetails";
+}
+<div>
+	<hr />
+	<h4>Sucessfully registered</h4>
+	<dl class="dl-horizontal">
+		<dt>
+			@Html.DisplayNameFor(model => model.UserName)
+		</dt>
+
+		<dd>
+			@Html.DisplayFor(model => model.UserName)
+		</dd>
+	</dl>
+</div>
+<p>
+	@Html.ActionLink("Back Home", "Index", "Home")
+</p>

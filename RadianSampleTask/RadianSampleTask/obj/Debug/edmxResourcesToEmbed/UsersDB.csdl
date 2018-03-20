@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UsersRegistrationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="MiddleName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="FirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Country" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="State" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="EmailAddress" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="UserName" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityContainer Name="UsersRegistrationEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="countries" EntityType="UsersRegistrationModel.country" />
+    <EntitySet Name="States" EntityType="UsersRegistrationModel.State" />
+    <AssociationSet Name="FK__States__CountryI__38996AB5" Association="UsersRegistrationModel.FK__States__CountryI__38996AB5">
+      <End Role="country" EntitySet="countries" />
+      <End Role="State" EntitySet="States" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="country">
+    <Key>
+      <PropertyRef Name="countryId" />
+    </Key>
+    <Property Name="countryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="countryName" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="States" Relationship="UsersRegistrationModel.FK__States__CountryI__38996AB5" FromRole="country" ToRole="State" />
+  </EntityType>
+  <EntityType Name="State">
+    <Key>
+      <PropertyRef Name="StateID" />
+    </Key>
+    <Property Name="StateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StateNames" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="CountryID" Type="Int32" />
+    <NavigationProperty Name="country" Relationship="UsersRegistrationModel.FK__States__CountryI__38996AB5" FromRole="State" ToRole="country" />
+  </EntityType>
+  <Association Name="FK__States__CountryI__38996AB5">
+    <End Type="UsersRegistrationModel.country" Role="country" Multiplicity="0..1" />
+    <End Type="UsersRegistrationModel.State" Role="State" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="country">
+        <PropertyRef Name="countryId" />
+      </Principal>
+      <Dependent Role="State">
+        <PropertyRef Name="CountryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
