@@ -111,21 +111,21 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
         {
             var sql = new StringBuilder();
             sql.Append("SELECT");
-            if (MsSqlProductVersion[0] < 11)
+            if (MsSqlProductVersion[0] < 12)
                 sql.Append(" TOP " + (offset + count));
-            sql.Append(" [ErrorId], [Application], [Host], [Type], [Source], [Message], [User], [StatusCode], [TimeUtc], [Sequence]" + ((includeDetails) ? ", [AllXml]" : ""));
+            sql.Append(" [ErrorId], [Application], [Host], [Type], [Source], [Message], [User], [StatusCode], [TimeUtc], [Help] , [Sequence]" + ((includeDetails) ? ", [AllXml]" : ""));
             sql.Append(" FROM [{ElmahSchema}].[ELMAH_Error] WITH (NOLOCK)");
             if (!String.IsNullOrWhiteSpace(where))
                 sql.Append(" WHERE " + where);
             sql.Append(" ORDER BY " + (String.IsNullOrWhiteSpace(orderBy) ? "Sequence DESC" : orderBy));
-            if (MsSqlProductVersion[0] >= 11)
+            if (MsSqlProductVersion[0] >= 12)
                 sql.Append(" OFFSET " + offset + " ROWS FETCH NEXT " + count + " ROWS ONLY");
 
             int rowNum = offset;
             using (var cmd = this.CreateCommand(sql.ToString(), parameters))
             using (var reader = cmd.ExecuteReader())
             {
-                if (MsSqlProductVersion[0] < 11)
+                if (MsSqlProductVersion[0] < 12)
                 {
                     // Skip rows:
                     for (int i = 0; i < offset; i++)
@@ -238,9 +238,11 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
             instance.User = reader.GetString(6);
             instance.StatusCode = reader.GetInt32(7);
             instance.TimeUtc = DateTime.SpecifyKind(reader.GetDateTime(8), DateTimeKind.Utc);
-            instance.Sequence = reader.GetInt32(9);
-            instance.RowNum = rowNum; 
-            if (includeDetails)
+			instance.Help= reader.GetString(9);
+			instance.Sequence = reader.GetInt32(10);
+            instance.RowNum = rowNum;
+			
+			if (includeDetails)
             {
                 instance.AllXml = System.Xml.Linq.XDocument.Parse(reader.GetString(10));
             }

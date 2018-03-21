@@ -32,7 +32,6 @@ namespace RegistrationTaskMVC.Controllers
 		[HttpPost]
 		public ActionResult ValidateLoginDetails(LoginCredentials loginDetails)
 		{
-			 
 			bool validUser = apiCallForUsers.UserExist(loginDetails.userName, loginDetails.password);
 			if (validUser)
 			{

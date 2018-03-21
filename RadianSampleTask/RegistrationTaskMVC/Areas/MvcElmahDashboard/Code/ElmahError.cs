@@ -29,14 +29,19 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
         [Column]
         public virtual string Message { get; set; }
 
-        [Column]
+		
+		[Column]
         public virtual string User { get; set; }
 
         [Column]
         public virtual int StatusCode { get; set; }
 
-        [Column]
+		[Column]
+		public virtual string Help { get; set; }
+
+		[Column]
         public virtual DateTime TimeUtc { get; set; }
+
 
         public virtual TimeSpan TimeAgo
         {

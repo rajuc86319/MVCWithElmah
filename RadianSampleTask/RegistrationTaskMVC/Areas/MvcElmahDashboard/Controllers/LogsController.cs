@@ -159,9 +159,15 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
                 return HttpNotFound();
             }
         }
+		[HttpPost]
+		public bool UpdateAnalysis(string analsysisText)
+		{
+			return true;
+		}
 
-        //[HttpGet]
-        public ActionResult RemoteHostInfo(string id)
+
+		//[HttpGet]
+		public ActionResult RemoteHostInfo(string id)
         {
             var url = (string)RemoteAddressInfoProvider.ServiceUrl;
             if (!String.IsNullOrWhiteSpace(url))

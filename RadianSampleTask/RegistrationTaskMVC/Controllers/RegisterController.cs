@@ -37,7 +37,6 @@ namespace RegistrationTaskMVC.Controllers
 		[HttpPost]
 		public ActionResult RegisterUser(User U)
 		{
-			
 			bool registerSuccess = apiCallForUsers.CreateUser(U);
 			if (registerSuccess)
 			{

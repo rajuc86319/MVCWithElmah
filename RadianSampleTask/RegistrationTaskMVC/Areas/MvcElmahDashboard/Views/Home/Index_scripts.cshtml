@@ -105,6 +105,26 @@ function stopContentReload() {
     if (reloadContentTimerId != -1) clearTimeout(reloadContentTimerId);
 }
 
+function showHelp(i) {
+		var x = document.getElementById("helpText" +i);
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	}
+function saveHelpText(texareaId) {
+var textAreaData = document.getElementById(texareaId).val();   
+ var saveData = $.ajax({
+      type: 'POST',
+      url: "http://localhost:53296/MvcElmahDashboard/Logs/UpdateAnalysis",
+      data: textAreaData,
+      dataType: "text",
+      success: function(resultData) { alert("Save Complete") }
+});
+saveData.error(function() { alert("Something went wrong"); });
+}
+
 var heartBeatTimerId;
 function heartBeat(url, intervalSec) {
     $(".heartbeat .timebar").css("animation", "none");
@@ -130,3 +150,6 @@ function heartBeat(url, intervalSec) {
         $(".heartbeat-failure").removeClass("hidden");
     });
 }
+
+	
+	
