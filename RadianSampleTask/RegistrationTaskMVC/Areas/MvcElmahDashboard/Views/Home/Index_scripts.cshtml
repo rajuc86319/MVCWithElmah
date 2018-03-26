@@ -114,11 +114,13 @@ function showHelp(i) {
 		}
 	}
 function saveHelpText(texareaId) {
-var textAreaData = document.getElementById(texareaId).val();   
+var textAreaData =  document.getElementById("textArea" +texareaId).value;
+var i=10;
  var saveData = $.ajax({
       type: 'POST',
       url: "http://localhost:53296/MvcElmahDashboard/Logs/UpdateAnalysis",
-      data: textAreaData,
+      data: {'Sequence':texareaId,
+             'textAreaData': textAreaData},
       dataType: "text",
       success: function(resultData) { alert("Save Complete") }
 });

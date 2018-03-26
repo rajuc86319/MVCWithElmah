@@ -1,8 +1,11 @@
+using Microsoft.Ajax.Utilities;
+using RegistrationTaskMVC.Areas.MvcElmahDashboard.Code;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
@@ -11,6 +14,7 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
     public class ElmahDashboardContext : IDisposable
     {
         #region Construction & Disposal
+		
 
         public ElmahDashboardContext()
             : this(ConfigurationManager.AppSettings["MvcElmahDashboardConnectionName"])
@@ -43,12 +47,13 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
 
             this.Initialize();
         }
-
+		public static string ConnectionString;
         private static IDbConnection CreateConnection(DbProviderFactory dbProviderFactory, string connectionString)
         {
             var conn = dbProviderFactory.CreateConnection();
             conn.ConnectionString = connectionString;
-            conn.Open();
+			ConnectionString= connectionString;
+			conn.Open();
             return conn;
         }
 
@@ -192,7 +197,21 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
                 }
             }
         }
+		public void AnalysisUpdation(int sequence,string AnalysisData)
+		{
+			using (SqlConnection con=new SqlConnection(ConnectionString))
+			using (SqlCommand cmd = new SqlCommand("AnalysisUpdation", con))
+			{
+				cmd.CommandType = CommandType.StoredProcedure;
 
+				cmd.Parameters.Add("@Sequence", SqlDbType.VarChar).Value = sequence;
+				cmd.Parameters.Add("@AnalysisData", SqlDbType.VarChar).Value = AnalysisData;
+
+				con.Open();
+				cmd.ExecuteNonQuery();
+			}
+			
+			}
         public IEnumerable<string> ListSource()
         {
             using (var cmd = this.CreateCommand("SELECT DISTINCT [Source] FROM [{ElmahSchema}].[ELMAH_Error] WITH (NOLOCK) ORDER BY 1"))
@@ -238,7 +257,7 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
             instance.User = reader.GetString(6);
             instance.StatusCode = reader.GetInt32(7);
             instance.TimeUtc = DateTime.SpecifyKind(reader.GetDateTime(8), DateTimeKind.Utc);
-			instance.Help= reader.GetString(9);
+			instance.Help = reader.IsDBNull(9) ? " ": reader.GetString(9);
 			instance.Sequence = reader.GetInt32(10);
             instance.RowNum = rowNum;
 			

@@ -160,8 +160,10 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
             }
         }
 		[HttpPost]
-		public bool UpdateAnalysis(string analsysisText)
+		public bool UpdateAnalysis(int Sequence,string textAreaData)
 		{
+			ElmahDashboardContext ec = new ElmahDashboardContext();
+			ec.AnalysisUpdation(Sequence, textAreaData);
 			return true;
 		}
 
