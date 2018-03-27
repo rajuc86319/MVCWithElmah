@@ -82,7 +82,7 @@
 </div>
 
 <div data-moveto="#content-perapp">
-    <h4>Per Application</h4>
+    @*<h4>Per Application</h4>
     <table class="table table-striped table-condensed">
         <tbody>
             @foreach (var pair in Model.AppDailyCounters.OrderBy(p => p.Key))
@@ -97,5 +97,18 @@
             }
         </tbody>
     </table>
-    <div class="legend">Error count/application/day - Last 4 days</div>
+    <div class="legend">Error count/application/day - Last 4 days</div>*@
+
+	<table align="center">
+		<tr>
+			<td>
+				<img src="@Url.Action("CreateBarDaily","Logs")" alt="Bar Chart using MVC" />
+			</td>
+			<td>
+				<img src="@Url.Action("CreateLineDaily","Logs")" alt="Pie Chart using MVC" />
+			</td>
+		</tr>
+
+	</table>
+
 </div>

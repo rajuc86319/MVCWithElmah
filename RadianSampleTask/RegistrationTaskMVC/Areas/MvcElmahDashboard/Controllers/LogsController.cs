@@ -1,11 +1,13 @@
 using RegistrationTaskMVC.Areas.MvcElmahDashboard.Code;
 using RegistrationTaskMVC.Areas.MvcElmahDashboard.Models.Logs;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
@@ -19,7 +21,8 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
 
         private static dynamic RemoteAddressInfoProvider = new ExternalServiceConfig(ConfigurationManager.AppSettings["MvcElmahDashboardRemoteAddressInfoProvider"]);
 
-        #region Infrastructure
+        
+		#region Infrastructure
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -32,9 +35,10 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
             base.OnActionExecuting(filterContext);
         }
 
-        #endregion
+		#endregion
 
-        public ActionResult Index(int? offset, int? length)
+
+		public ActionResult Index(int? offset, int? length)
         {
             using (var context = new ElmahDashboardContext())
             {
@@ -57,7 +61,8 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
                 var orderBy = (String)null;
                 var model = new ItemsModel();
                 model.Items = context.ListErrors(offset ?? 0, length ?? 10, where, orderBy, false, parameters).ToArray();
-                if (truncValueLength.HasValue)
+				
+				if (truncValueLength.HasValue)
                 {
                     foreach (var item in model.Items)
                     {
@@ -206,11 +211,102 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
                 return result;
             }
         }
+		
+		List<ElmahError> allErrors = new ElmahDashboardContext().GetAllErrors();
+		List<ElmahError> allHourlyErrors = new ElmahDashboardContext().GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-1) && i.TimeUtc <= DateTime.UtcNow).ToList();
+		List<ElmahError> allDailyErrors = new ElmahDashboardContext().GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-24) && i.TimeUtc <= DateTime.UtcNow).ToList();
 
-        /// <summary>
-        /// Used to handle scripts and styles requests.
-        /// </summary>
-        protected override void HandleUnknownAction(string actionName)
+		[HttpGet]
+		public ActionResult CreateBarHourly()
+		{
+
+
+			ViewBag.ChartType = "CreateBarHourly";
+			//Create bar chart
+			ViewBag.errorTypes = GetDistinctErrorTypes(allHourlyErrors);
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allHourlyErrors);
+			return View("CreateBar");
+		}
+		[HttpGet]
+		public ActionResult CreateLineHourly()
+		{
+			var now = DateTime.UtcNow;
+			//Create bar chart
+			ViewBag.ChartType = "CreateLineHourly";
+			ViewBag.errorTypes = GetDistinctErrorTypes(allHourlyErrors);
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allHourlyErrors);
+			return View("CreateLine");
+		}
+		[HttpGet]
+		public ActionResult CreateBarDaily()
+		{
+
+			//Create bar chart
+			ViewBag.errorTypes = GetDistinctErrorTypes(allDailyErrors);
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allDailyErrors);
+			return View("CreateBar");
+		}
+		[HttpGet]
+		public ActionResult CreateLineDaily()
+		{
+			var now = DateTime.UtcNow;
+			//Create bar chart
+			ViewBag.errorTypes = GetDistinctErrorTypes(allDailyErrors);
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allDailyErrors);
+			return View("CreateLine");
+		}
+
+		[HttpGet]
+		public ActionResult CreateBar()
+		{
+			//Create bar chart
+			
+			ViewBag.errorTypes = GetDistinctErrorTypes(allErrors);
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allErrors);
+			return View();
+		}
+		//[HttpGet]
+		//public ActionResult CreatePie()
+		//{
+		//	//Create bar chart
+		//	ViewBag.errorTypes = GetDistinctErrorTypes(allErrors);
+		//	ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allErrors);
+		//	return View();
+		//}
+		[HttpGet]
+		public ActionResult CreateLine()
+		{
+			//Create bar chart
+			ViewBag.errorTypes = GetDistinctErrorTypes(allErrors);
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allErrors);
+			return View();
+		}
+
+		[NonAction]
+		private string[] GetDistinctErrorTypes(List<ElmahError> allErrors)
+		{
+			
+			string[] errorTypes = allErrors.Select(x => x.Type).Distinct().ToArray();
+			return errorTypes;
+		}
+		[NonAction]
+	   private int[] GetErrorCount(string [] errorTypes, List<ElmahError> allErrors)
+		{
+			
+			int[] errorCount = new int[errorTypes.Length];
+			int count, i = 0;
+			foreach (string errorType in errorTypes)
+			{
+				count = allErrors.Where(x => x.Type == errorType).Count();
+				errorCount[i] = count;
+				i++;
+			}
+			return errorCount;
+		}
+		/// <summary>
+		/// Used to handle scripts and styles requests.
+		/// </summary>
+		protected override void HandleUnknownAction(string actionName)
         {
             this.View(actionName).ExecuteResult(this.ControllerContext);
         }

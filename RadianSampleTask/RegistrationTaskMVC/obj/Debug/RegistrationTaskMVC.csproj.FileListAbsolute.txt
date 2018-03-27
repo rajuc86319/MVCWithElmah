@@ -235,3 +235,4 @@ C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RegistrationTaskMVC\
 C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RegistrationTaskMVC\bin\Microsoft.AI.Web.xml
 C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RegistrationTaskMVC\obj\Debug\RegistrationTaskMVC.dll
 C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RegistrationTaskMVC\obj\Debug\RegistrationTaskMVC.pdb
+C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RegistrationTaskMVC\obj\Debug\RegistrationTaskMVC.csprojResolveAssemblyReference.cache

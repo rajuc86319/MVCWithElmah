@@ -176,3 +176,4 @@ C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RadianSampleTask\bin
 C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RadianSampleTask\bin\Microsoft.AI.Web.xml
 C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RadianSampleTask\obj\Debug\RadianSampleTask.dll
 C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RadianSampleTask\obj\Debug\RadianSampleTask.pdb
+C:\Users\neelam_naidu\Desktop\MVCWithElmah\RadianSampleTask\RadianSampleTask\obj\Debug\TaskWebAPI.csprojResolveAssemblyReference.cache

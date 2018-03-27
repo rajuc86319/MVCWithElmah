@@ -212,7 +212,30 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
 			}
 			
 			}
-        public IEnumerable<string> ListSource()
+		public  List<ElmahError> GetAllErrors()
+		{
+			int rownum = 0;
+			List<ElmahError> allErrors = new List<ElmahError>();
+			using (SqlConnection con = new SqlConnection(ConnectionString))
+			using (SqlCommand cmd = new SqlCommand("sp_GetAllErrors", con))
+			{
+				cmd.CommandType = CommandType.StoredProcedure;
+				con.Open();
+				using (var reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						var ElmahError=MaterializeElmahError(reader, false, rownum);
+						allErrors.Add(ElmahError);
+						rownum++;
+					}
+				}
+			}
+			return allErrors;
+		}
+
+
+		public IEnumerable<string> ListSource()
         {
             using (var cmd = this.CreateCommand("SELECT DISTINCT [Source] FROM [{ElmahSchema}].[ELMAH_Error] WITH (NOLOCK) ORDER BY 1"))
             using (var reader = cmd.ExecuteReader())

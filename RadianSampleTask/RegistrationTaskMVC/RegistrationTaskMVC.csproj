@@ -218,6 +218,9 @@
     <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Areas\Scripts\bootstrap.js" />
     <Content Include="Areas\Scripts\bootstrap.min.js" />
+    <Content Include="Areas\MvcElmahDashboard\Views\Logs\CreateBar.cshtml" />
+    <Content Include="Areas\MvcElmahDashboard\Views\Logs\CreatePie.cshtml" />
+    <Content Include="Areas\MvcElmahDashboard\Views\Logs\CreateLine.cshtml" />
     <None Include="Areas\Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Areas\Scripts\jquery-1.10.2.js" />
     <Content Include="Areas\Scripts\jquery-1.10.2.min.js" />
