@@ -1,7 +1,8 @@
 @model RegistrationTaskMVC.Areas.MvcElmahDashboard.Models.Logs.ItemsModel
 @{
-    Layout = null;
-    var dateFormat = System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern.Replace("yyyy", "yy").ToUpperInvariant();
+	Layout = null;
+	var dateFormat = System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern.Replace("yyyy", "yy").ToUpperInvariant();
+	var categories = new List<SelectListItem>();
 }
 
 @foreach (var item in Model.Items)
@@ -24,10 +25,23 @@
         <td>@item.Host</td>
         <td>@item.Source</td>
         <td>@item.Type</td>
-        <td>@item.Message <a id="moreLink" onclick="showHelp(@(item.Sequence))">More</a> 
+		<td>
+			@foreach (var category in ViewBag.categories)
+			{
+				categories.Add(new SelectListItem { Text= category.Text, Value= category.Value,Selected=category.Text==item.categoryName? true :false });
+			}
+
+			@Html.DropDownList("category",
+		   categories,
+		   new { @id="drop"+@item.Sequence, onchange= "UpdateCategory("+item.Sequence+")", style = "width: 170px;" })
+		</td> 
+		
+		<td>@item.Message <a id="moreLink" onclick="showHelp(@(item.Sequence))">More</a> 
 		<div class="form-group" id="helpText@(item.Sequence)" style="display:none" >  <textarea id="textArea@(item.Sequence)" rows="4" cols="50"  >@item.Help</textarea> <button id="save@(item.Sequence)"  onclick="saveHelpText(@(item.Sequence))">save</button>  </div> 
-		</td>       	
-	 </tr>
+		</td>       
+	</tr>
+
+	categories.Clear();
 }
 
 

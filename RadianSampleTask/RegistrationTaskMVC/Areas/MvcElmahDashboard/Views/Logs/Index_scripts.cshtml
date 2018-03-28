@@ -43,6 +43,41 @@ $(function () {
 
     reloadData();
 });
+function showHelp(i) {
+		var x = document.getElementById("helpText" +i);
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	}
+function saveHelpText(texareaId) {
+var textAreaData =  document.getElementById("textArea" +texareaId).value;
+ var saveData = $.ajax({
+      type: 'POST',
+      url: "http://localhost:53296/MvcElmahDashboard/Logs/UpdateAnalysis",
+      data: {'Sequence':texareaId,
+             'textAreaData': textAreaData},
+      dataType: "text",
+      success: function(resultData) { alert("Save Complete") }
+});
+saveData.error(function() { alert("Something went wrong"); });
+showHelp(texareaId);
+}
+
+function UpdateCategory(id) {
+					jQuery.support.cors = true;
+					var Id = $('#drop'+id).val();
+					var value = $("#drop"+id+" option:selected").text();
+					$.ajax({
+						url: 'http://localhost:53296/MvcElmahDashboard/Logs/UpdateCategory',
+						type: "POST",
+						dataType: "text",
+						data: { sequenceId: id,
+                                 categoryId: Id }
+
+					});
+				}
 
 function reloadData() {
     var args = {

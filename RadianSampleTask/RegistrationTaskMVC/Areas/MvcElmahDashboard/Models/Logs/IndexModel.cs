@@ -11,5 +11,7 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Models.Logs
         public string[] Types { get; set; }
         
         public string[] Sources { get; set; }
-    }
+
+		public string[] ErrorCategories { get; set; }
+	}
 }

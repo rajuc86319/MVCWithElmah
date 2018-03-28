@@ -1,0 +1,16 @@
+﻿
+@{
+	ViewBag.Title = "CreatePie";
+}
+
+<h2>CreatePie</h2>
+
+@{
+	var myChart = new Chart(width: 600, height: 400)
+		.AddTitle("Total Error Count Till Now")
+		.AddSeries(
+			chartType:"pie",
+			xValue: ViewBag.errorTypes,
+			yValues: ViewBag.ErrorCount)
+		.Write();
+}

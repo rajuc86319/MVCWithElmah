@@ -127,6 +127,20 @@ saveData.error(function() { alert("Something went wrong"); });
 showHelp(texareaId);
 }
 
+function UpdateCategory(id) {
+					jQuery.support.cors = true;
+					var Id = $('#drop'+id).val();
+					var value = $("#drop"+id+" option:selected").text();
+					$.ajax({
+						url: 'http://localhost:53296/MvcElmahDashboard/Logs/UpdateCategory',
+						type: "POST",
+						dataType: "text",
+						data: { sequenceId: id,
+                                 categoryId: Id }
+						
+					});
+				}
+
 var heartBeatTimerId;
 function heartBeat(url, intervalSec) {
     $(".heartbeat .timebar").css("animation", "none");

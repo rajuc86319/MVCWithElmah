@@ -185,6 +185,7 @@
     <Compile Include="Areas\MvcElmahDashboard\Controllers\SharedController.cs" />
     <Compile Include="Areas\MvcElmahDashboard\Models\Home\DailyStatsModel.cs" />
     <Compile Include="Areas\MvcElmahDashboard\Models\Home\HourlyStatsModel.cs" />
+    <Compile Include="Areas\MvcElmahDashboard\Models\Logs\Categories.cs" />
     <Compile Include="Areas\MvcElmahDashboard\Models\Logs\DetailsModel.cs" />
     <Compile Include="Areas\MvcElmahDashboard\Models\Logs\IndexModel.cs" />
     <Compile Include="Areas\MvcElmahDashboard\Models\Logs\ItemDetailsModel.cs" />

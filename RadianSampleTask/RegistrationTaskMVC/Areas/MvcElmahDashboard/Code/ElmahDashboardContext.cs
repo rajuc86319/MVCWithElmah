@@ -1,5 +1,6 @@
 using Microsoft.Ajax.Utilities;
 using RegistrationTaskMVC.Areas.MvcElmahDashboard.Code;
+using RegistrationTaskMVC.Areas.MvcElmahDashboard.Models.Logs;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,8 +15,6 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
     public class ElmahDashboardContext : IDisposable
     {
         #region Construction & Disposal
-		
-
         public ElmahDashboardContext()
             : this(ConfigurationManager.AppSettings["MvcElmahDashboardConnectionName"])
         { }
@@ -118,8 +117,8 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
             sql.Append("SELECT");
             if (MsSqlProductVersion[0] < 12)
                 sql.Append(" TOP " + (offset + count));
-            sql.Append(" [ErrorId], [Application], [Host], [Type], [Source], [Message], [User], [StatusCode], [TimeUtc], [Help] , [Sequence]" + ((includeDetails) ? ", [AllXml]" : ""));
-            sql.Append(" FROM [{ElmahSchema}].[ELMAH_Error] WITH (NOLOCK)");
+            sql.Append(" [ErrorId], [Application], [Host], [Type], [Source], [Message], [User], [StatusCode], [TimeUtc], [Help] , [Sequence],[CategoryName]" + ((includeDetails) ? ", [AllXml]" : ""));
+            sql.Append(" FROM [{ElmahSchema}].[ELMAH_Error] WITH (NOLOCK) INNER JOIN ErrorCateogry ON ELMAH_Error.categoryID = ErrorCateogry.categoryID");
             if (!String.IsNullOrWhiteSpace(where))
                 sql.Append(" WHERE " + where);
             sql.Append(" ORDER BY " + (String.IsNullOrWhiteSpace(orderBy) ? "Sequence DESC" : orderBy));
@@ -197,6 +196,57 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
                 }
             }
         }
+
+		public IEnumerable<Categories> ListCategories()
+		{
+			IList<Categories> allCategories= new List<Categories>();
+			using (SqlConnection con = new SqlConnection(ConnectionString))
+			{
+				using (var cmd = new SqlCommand("SELECT * FROM [ErrorCateogry] ", con))
+				{
+					con.Open();
+					using (var reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+
+							Categories category = new Categories();
+							category.catogeryID = reader.GetInt32(0);
+							category.categoryName = reader.GetString(1);
+							allCategories.Add(category);
+						}
+					}
+				}
+			}
+
+			return allCategories;
+		}
+
+		/// <summary>
+		/// to update the error category of a particular error 
+		/// </summary>
+		/// <param name="sequence"></param>
+		/// <param name="categoryId"></param>
+		public void CategoryUpdation(int sequence, int categoryId)
+		{
+			using (SqlConnection con = new SqlConnection(ConnectionString))
+			using (SqlCommand cmd = new SqlCommand("categoryUpdation", con))
+			{
+				cmd.CommandType = CommandType.StoredProcedure;
+
+				cmd.Parameters.Add("@Sequence", SqlDbType.VarChar).Value = sequence;
+				cmd.Parameters.Add("@AnalysisData", SqlDbType.VarChar).Value = categoryId;
+
+				con.Open();
+				cmd.ExecuteNonQuery();
+			}
+
+		}
+		/// <summary>
+		/// to update the anaylsis for a logged error
+		/// </summary>
+		/// <param name="sequence"></param>
+		/// <param name="AnalysisData"></param>
 		public void AnalysisUpdation(int sequence,string AnalysisData)
 		{
 			using (SqlConnection con=new SqlConnection(ConnectionString))
@@ -282,7 +332,8 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
             instance.TimeUtc = DateTime.SpecifyKind(reader.GetDateTime(8), DateTimeKind.Utc);
 			instance.Help = reader.IsDBNull(9) ? " ": reader.GetString(9);
 			instance.Sequence = reader.GetInt32(10);
-            instance.RowNum = rowNum;
+			instance.categoryName = reader.IsDBNull(11)?" ":reader.GetString(11);
+			instance.RowNum = rowNum;
 			
 			if (includeDetails)
             {

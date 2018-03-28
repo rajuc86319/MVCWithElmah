@@ -42,8 +42,11 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
 		[Column]
         public virtual DateTime TimeUtc { get; set; }
 
+		[Column]
+		public virtual int CategoryId { get; set; }
 
-        public virtual TimeSpan TimeAgo
+		public virtual string categoryName{get;set;}
+		public virtual TimeSpan TimeAgo
         {
             get
             {

@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Error Data Representation via Bar Chart from Last 24 hours" ;
+}
+
+<h2>CreateBar</h2>
+
+@if (ViewBag.ChartType == "CreateBarHourly" )
+{
+	ViewBag.Title= "Error Data Representation via Bar Chart from Last Hour";
+}
+@{
+	var myChart = new Chart(width: 600, height: 400)
+		.AddTitle(ViewBag.Title)
+		.AddSeries(
+			name: "Employee",
+			xValue: ViewBag.errorTypes,
+			yValues: ViewBag.ErrorCount)
+		.Write();
+}
