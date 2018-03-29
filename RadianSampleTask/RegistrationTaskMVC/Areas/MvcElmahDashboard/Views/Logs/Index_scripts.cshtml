@@ -3,6 +3,8 @@
     Response.ContentType = "application/javascript";
     Response.Cache.SetExpires(DateTime.Now.AddDays(30));
 }
+
+var previousId;
 $(function () {
 
     /// Initializes the select element's value with the named field from the query string.
@@ -50,7 +52,23 @@ function showHelp(i) {
 		} else {
 			x.style.display = "none";
 		}
-	}
+	  if(previousId==null)
+          {
+              previousId=i;
+           }
+        else{
+                  if(previousId!=i)
+                  {  hideHelp(previousId);
+                    previousId=i;
+					}
+			}
+}
+function hideHelp(previousId)
+   {
+       var previousMore= document.getElementById("helpText" +previousId);
+        previousMore.style.display = "none";
+  }
+
 function saveHelpText(texareaId) {
 var textAreaData =  document.getElementById("textArea" +texareaId).value;
  var saveData = $.ajax({
@@ -59,9 +77,9 @@ var textAreaData =  document.getElementById("textArea" +texareaId).value;
       data: {'Sequence':texareaId,
              'textAreaData': textAreaData},
       dataType: "text",
-      success: function(resultData) { alert("Save Complete") }
+      @*success: function(resultData) { alert("Save Complete") }*@
 });
-saveData.error(function() { alert("Something went wrong"); });
+@*saveData.error(function() { alert("Something went wrong"); });*@
 showHelp(texareaId);
 }
 
