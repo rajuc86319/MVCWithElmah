@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
 	
 		ViewBag.Title = "Error Data Representation via Line Chart from Last 24 hours";
 	
@@ -14,7 +13,7 @@
 		.AddTitle(ViewBag.Title)
 		.AddSeries(
 			chartType: "line",
-			xValue: ViewBag.errorTypes,
+			xValue:  ViewBag.errorTypes,
 			yValues: ViewBag.ErrorCount)
 		.Write();
   }

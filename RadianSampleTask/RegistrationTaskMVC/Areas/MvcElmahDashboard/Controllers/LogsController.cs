@@ -230,18 +230,22 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
 		/// <summary>
 		/// to get all the errors
 		/// </summary>
-		List<ElmahError> allErrors = new ElmahDashboardContext().GetAllErrors();
-		
-		/// <summary>
-		/// to get the erros logged in the last hour
-		/// </summary>
-		List<ElmahError> allHourlyErrors = new ElmahDashboardContext().GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-1) && i.TimeUtc <= DateTime.UtcNow).ToList();
-		
-		/// <summary>
-		/// gets the errors logged in the kast day
-		/// </summary>
-		List<ElmahError> allDailyErrors = new ElmahDashboardContext().GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-24) && i.TimeUtc <= DateTime.UtcNow).ToList();
 
+		private static List<ElmahError> GetAllErrors()
+		{
+			List<ElmahError> allErrors = new ElmahDashboardContext().GetAllErrors();
+			return allErrors;
+		}
+		private static List<ElmahError> GetHourlyErrors()
+		{
+			List<ElmahError> allHourlyErrors = LogsController.GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-1) && i.TimeUtc <= DateTime.UtcNow).ToList();
+			return allHourlyErrors;
+		}
+		private static List<ElmahError> GetDailyErrors()
+		{
+			List<ElmahError> allDailyErrors = LogsController.GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-24) && i.TimeUtc <= DateTime.UtcNow).ToList();
+			return allDailyErrors;
+		}
 		/// <summary>
 		/// action for Bar chart of hourly errors
 		/// </summary>
@@ -251,8 +255,8 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
 		{
 			ViewBag.ChartType = "CreateBarHourly";
 			//Create bar chart
-			ViewBag.errorTypes = GetDistinctErrorTypes(allHourlyErrors);
-			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allHourlyErrors);
+			ViewBag.errorTypes = GetDistinctErrorTypes(LogsController.GetHourlyErrors());
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, LogsController.GetHourlyErrors());
 			return View("CreateBar");
 		}
 		/// <summary>
@@ -264,8 +268,8 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
 		{
 			var now = DateTime.UtcNow;
 			ViewBag.ChartType = "CreateLineHourly";
-			ViewBag.errorTypes = GetDistinctErrorTypes(allHourlyErrors);
-			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allHourlyErrors);
+			ViewBag.errorTypes = GetDistinctErrorTypes(LogsController.GetHourlyErrors());
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, LogsController.GetHourlyErrors());
 			return View("CreateLine");
 		}
 		/// <summary>
@@ -280,8 +284,8 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
 		{
 
 			//Create bar chart
-			ViewBag.errorTypes = GetDistinctErrorTypes(allDailyErrors);
-			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allDailyErrors);
+			ViewBag.errorTypes = GetDistinctErrorTypes(LogsController.GetDailyErrors());
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, LogsController.GetDailyErrors());
 			return View("CreateBar");
 		}
 		/// <summary>
@@ -293,35 +297,35 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
 		{
 			var now = DateTime.UtcNow;
 			//Create bar chart
-			ViewBag.errorTypes = GetDistinctErrorTypes(allDailyErrors);
-			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allDailyErrors);
+			ViewBag.errorTypes = GetDistinctErrorTypes(LogsController.GetDailyErrors());
+			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, LogsController.GetDailyErrors());
 			return View("CreateLine");
 		}
-		/// <summary>
-		/// action for bar chart
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		public ActionResult CreateBar()
-		{
-			//Create bar chart
+		///// <summary>
+		///// action for bar chart
+		///// </summary>
+		///// <returns></returns>
+		//[HttpGet]
+		//public ActionResult CreateBar()
+		//{
+		//	//Create bar chart
 			
-			ViewBag.errorTypes = GetDistinctErrorTypes(allErrors);
-			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allErrors);
-			return View();
-		}
-		/// <summary>
-		/// action for line chart
-		/// </summary>
-		/// <returns></returns>
-		[HttpGet]
-		public ActionResult CreateLine()
-		{
-			//Create bar chart
-			ViewBag.errorTypes = GetDistinctErrorTypes(allErrors);
-			ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allErrors);
-			return View();
-		}
+		//	ViewBag.errorTypes = GetDistinctErrorTypes(allErrors);
+		//	ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allErrors);
+		//	return View();
+		//}
+		///// <summary>
+		///// action for line chart
+		///// </summary>
+		///// <returns></returns>
+		//[HttpGet]
+		//public ActionResult CreateLine()
+		//{
+		//	//Create bar chart
+		//	ViewBag.errorTypes = GetDistinctErrorTypes(allErrors);
+		//	ViewBag.ErrorCount = GetErrorCount(ViewBag.errorTypes, allErrors);
+		//	return View();
+		//}
 
 		/// <summary>
 		/// gets all the Distinct errors logged in the DB

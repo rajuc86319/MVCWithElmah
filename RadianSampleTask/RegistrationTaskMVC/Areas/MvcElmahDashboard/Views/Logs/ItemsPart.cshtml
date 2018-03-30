@@ -27,13 +27,13 @@
         <td>@item.Type</td>
 		<td>
 			@foreach (var category in ViewBag.categories)
-			{
+			{ 
 				categories.Add(new SelectListItem { Text= category.Text, Value= category.Value,Selected=category.Text==item.categoryName? true :false });
 			}
 
 			@Html.DropDownList("category",
-		   categories,
-		   new { @id="drop"+@item.Sequence, onchange= "UpdateCategory("+item.Sequence+")", style = "width: 170px;" })
+categories,
+new { @id = "drop" + @item.Sequence , onchange= "UpdateCategory("+item.Sequence+")", style = "width: 170px;" })
 		</td> 
 		
 		<td>@item.Message <a id="moreLink" onclick="showHelp(@(item.Sequence))">More</a> 
