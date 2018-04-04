@@ -88,7 +88,27 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
 
         protected IDbConnection Connection { get; private set; }
 
-        protected int[] MsSqlProductVersion { get; private set; }
+		public IEnumerable<ElmahErrorItem> GetErrorsByDate(DateTime startDate, DateTime endDate)
+		{
+			var sql = new StringBuilder();
+			sql.Append("SELECT");
+			sql.Append(" [Application], [TimeUtc], [Sequence]");
+			sql.Append(" FROM [{ElmahSchema}].[ELMAH_Error] WITH (NOLOCK)");
+			sql.Append(" WHERE [TimeUtc] > @p0 AND [TimeUtc] >= @p1");
+
+			using (var cmd = this.CreateCommand(sql.ToString(), new object[] { startDate, endDate }))
+			{
+				using (var reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						yield return MaterializeElmahErrorItem(reader);
+					}
+				}
+			}
+		}
+
+		protected int[] MsSqlProductVersion { get; private set; }
 
         public ElmahError GetError(Guid id)
         {

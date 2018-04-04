@@ -74,5 +74,12 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Code
         {
             return CachedItems.Where(i => i.TimeUtc >= rangeStartHour && i.TimeUtc <= rangeEndHour).ToList();
         }
-    }
+
+		public IEnumerable<ElmahErrorItem> GetErrorsByDate(DateTime startDate, DateTime endDate)
+		{
+			return new ElmahDashboardContext().GetErrorsByDate(startDate, endDate);
+
+
+		}
+	}
 }
