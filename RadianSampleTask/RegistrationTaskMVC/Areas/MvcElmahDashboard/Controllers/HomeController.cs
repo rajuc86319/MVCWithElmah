@@ -28,7 +28,7 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
         }
 
         #endregion
-//remotee changes
+//latest remote changes
         // GET: ElmahLog/Home
         public ActionResult Index()
         {
