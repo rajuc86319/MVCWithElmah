@@ -28,7 +28,7 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
         }
 
         #endregion
-
+//local latest changes
         // GET: ElmahLog/Home
         public ActionResult Index()
         {
@@ -103,7 +103,21 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
 				   var model = HomeController.GetDailyStatsModel();
 				return View(model);
             }
+        }
+		public ActionResult StatsByDate(DateTime startDate,DateTime EndDate)
+		{
+			using (var context = new ElmahDashboardContext())
+			{
+				var model = new DateStatsModel();
+				model.RangeEnd = startDate;
+				model.RangeStart =EndDate;
+				model.ErrorsInTheDateRange = EECounters.GetErrorsByDate(startDate,EndDate).ToList();
+				return View(model);
+			}
+
     
+				
+		}
         public ActionResult Heartbeat()
         {
             Response.CacheControl = "no-cache";
