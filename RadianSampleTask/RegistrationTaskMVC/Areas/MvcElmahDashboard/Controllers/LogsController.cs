@@ -52,8 +52,8 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
 				return View(model);
             }
         }
-
-        public ActionResult Items(int? offset, int? length, string application, string host, string source, string type, string search, int? truncValueLength)
+		
+		public ActionResult Items(int? offset, int? length, string application, string host, string source, string type, string search, int? truncValueLength,DateTime? startDate,DateTime? endDate)
         {
             using (var context = new ElmahDashboardContext())
             {
@@ -231,17 +231,17 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
 		/// to get all the errors
 		/// </summary>
 
-		private static List<ElmahError> GetAllErrors()
+		public static List<ElmahError> GetAllErrors()
 		{
 			List<ElmahError> allErrors = new ElmahDashboardContext().GetAllErrors();
 			return allErrors;
 		}
-		private static List<ElmahError> GetHourlyErrors()
+		public static List<ElmahError> GetHourlyErrors()
 		{
 			List<ElmahError> allHourlyErrors = LogsController.GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-1) && i.TimeUtc <= DateTime.UtcNow).ToList();
 			return allHourlyErrors;
 		}
-		private static List<ElmahError> GetDailyErrors()
+		public static List<ElmahError> GetDailyErrors()
 		{
 			List<ElmahError> allDailyErrors = LogsController.GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-24) && i.TimeUtc <= DateTime.UtcNow).ToList();
 			return allDailyErrors;

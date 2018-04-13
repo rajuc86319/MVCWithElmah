@@ -23,7 +23,7 @@
                         <tr>
                             @foreach (var value in Model.HourlyCounters)
                             {
-                                <td>@(value == 0 ? "-" : value.ToString())</td>
+                                <td><a>@(value == 0 ? "-" : value.ToString())</a></td>
                             }
                         </tr>
                     </tbody>
@@ -60,7 +60,9 @@
 
 	<div data-moveto="#content-sample">
 		<h4>Most recent errors</h4>
+		
 		<table class="table table-hover table-striped table-condensed">
+			
 			<thead>
 				<tr style="background-color: #e0e0e0;">
 					<th>Seq</th>
@@ -75,10 +77,18 @@
 				</tr>
 			</thead>
 			<tbody>
+				@if (Model.SampleLogCount != 0)
+				{
 				@Html.Action("Items", new { controller = "Logs", offset = 0, length = Model.SampleLogCount, truncValueLength = 60 })
-			</tbody>
+				}
+				
+				</tbody>
+		
 		</table>
+		
+		
 		<div class="legend">@(Model.SampleLogCount) latest errors. <a href="@Url.Action("Index", "Logs")">See logs</a> for more.</div>
+	
 	</div>
 
 	<div div data-moveto="#content-perapp">
@@ -104,9 +114,9 @@
 				<td>
 					<img src="@Url.Action("CreateBarHourly","Logs")" alt="Bar Chart using MVC" />
 				</td>
-				<td>
+				@*<td>
 					<img src="@Url.Action("CreateLineHourly","Logs")" alt="Pie Chart using MVC" />
-				</td>
+				</td>*@
 			</tr>
 
 		</table>

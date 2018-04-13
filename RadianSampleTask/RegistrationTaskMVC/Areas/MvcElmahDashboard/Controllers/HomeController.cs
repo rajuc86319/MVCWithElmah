@@ -48,8 +48,8 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
                 model.RangeStart = model.RangeEnd.AddHours(-24);
                 model.HourlyCounters = EECounters.GetHourlyCounters(model.RangeStart, model.RangeEnd);
                 model.LastHourErrors = EECounters.GetErrors(now.AddHours(-1), now);
-                model.SampleLogCount = Int32.Parse(ConfigurationManager.AppSettings["MvcElmahDashboardLogCount"].IfNullOrWhiteSpace("3"));
-                foreach (var app in EECounters.GetErrors(now.AddHours(-4), now).Select(i => i.Application).Distinct())
+                model.SampleLogCount = LogsController.GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-1) && i.TimeUtc <= DateTime.UtcNow).ToList().Count;
+				foreach (var app in EECounters.GetErrors(now.AddHours(-4), now).Select(i => i.Application).Distinct())
                 {
                     var appvar = app;
                     model.AppHourlyCounters[appvar] = EECounters.GetHourlyCounters(model.RangeEnd.AddHours(-4), model.RangeEnd, item => item.Application == appvar);
@@ -58,31 +58,52 @@ namespace RegistrationTaskMVC.Areas.MvcElmahDashboard.Controllers
                 return View(model);
             }
         }
-        
-        public ActionResult DailyStats()
+		public ActionResult GetErrorsByDate(DateTime startDate, DateTime endDate)
+		{
+			ViewBag.controller = "GetErrorsByDate";
+			ViewBag.startDate = startDate;
+			ViewBag.endDate = endDate;
+			var model = HomeController.GetDailyStatsModel();
+
+			return View("DailyStats", model);
+
+		}
+
+		[NonAction]
+		public static DailyStatsModel GetDailyStatsModel()
+		{
+			using (var context = new ElmahDashboardContext())
+			{
+				EECounters.UpdateCache(context);
+
+				var now = DateTime.UtcNow;
+				var model = new DailyStatsModel();
+				model.Timestamp = now;
+				model.RangeEnd = now.TruncToDays().AddDays(1);
+				model.RangeStart = model.RangeEnd.AddDays(-14);
+				model.DailyCounters = EECounters.GetDailyCounters(model.RangeStart, model.RangeEnd);
+				model.LastDayErrors = EECounters.GetErrors(now.AddDays(-1), now);
+				model.SampleLogCount = LogsController.GetAllErrors().Where(i => i.TimeUtc >= DateTime.UtcNow.AddHours(-24) && i.TimeUtc <= DateTime.UtcNow).ToList().Count;
+				foreach (var app in EECounters.GetErrors(now.AddDays(-4), now).Select(i => i.Application).Distinct())
+				{
+					var appvar = app;
+					model.AppDailyCounters[appvar] = EECounters.GetDailyCounters(model.RangeEnd.AddDays(-4), model.RangeEnd, item => item.Application == appvar);
+				}
+				return model;
+			}
+		}
+		public ActionResult StatsByDate(string textData)
+		{
+			return View();
+		}
+
+		public ActionResult DailyStats()
         {
-            using (var context = new ElmahDashboardContext())
-            {
-                EECounters.UpdateCache(context);
-
-                var now = DateTime.UtcNow;
-                var model = new DailyStatsModel();
-                model.Timestamp = now;
-                model.RangeEnd = now.TruncToDays().AddDays(1);
-                model.RangeStart = model.RangeEnd.AddDays(-14);
-                model.DailyCounters = EECounters.GetDailyCounters(model.RangeStart, model.RangeEnd);
-                model.LastDayErrors = EECounters.GetErrors(now.AddDays(-1), now);
-                model.SampleLogCount = Int32.Parse(ConfigurationManager.AppSettings["MvcElmahDashboardLogCount"].IfNullOrWhiteSpace("3"));
-                foreach (var app in EECounters.GetErrors(now.AddDays(-4), now).Select(i => i.Application).Distinct())
-                {
-                    var appvar = app;
-                    model.AppDailyCounters[appvar] = EECounters.GetDailyCounters(model.RangeEnd.AddDays(-4), model.RangeEnd, item => item.Application == appvar);
-                }
-
-                return View(model);
+			ViewBag.controller = "DailyStats";
+				   var model = HomeController.GetDailyStatsModel();
+				return View(model);
             }
-        }
-
+    
         public ActionResult Heartbeat()
         {
             Response.CacheControl = "no-cache";

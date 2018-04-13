@@ -1,12 +1,14 @@
 @model RegistrationTaskMVC.Areas.MvcElmahDashboard.Models.Home.DailyStatsModel
 @{
-    Layout = null;
-    Response.Cache.SetExpires(DateTime.Now.AddDays(1));
-    Response.Cache.SetCacheability(HttpCacheability.NoCache);
-    var iv = System.Globalization.CultureInfo.InvariantCulture;
-    var dateFormat = System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern.Replace("yyyy", "yy").ToUpperInvariant();
-    var dateFormatDmNet = (dateFormat.IndexOf("D") < dateFormat.IndexOf("M")) ? "dd/MM" : "MM/dd";
-    var dateFormatDmJs = dateFormatDmNet.ToUpperInvariant();
+	Layout = null;
+	Response.Cache.SetExpires(DateTime.Now.AddDays(1));
+	Response.Cache.SetCacheability(HttpCacheability.NoCache);
+	var iv = System.Globalization.CultureInfo.InvariantCulture;
+	var dateFormat = System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern.Replace("yyyy", "yy").ToUpperInvariant();
+	var dateFormatDmNet = (dateFormat.IndexOf("D") < dateFormat.IndexOf("M")) ? "dd/MM" : "MM/dd";
+	var dateFormatDmJs = dateFormatDmNet.ToUpperInvariant();
+	DateTime startDate = Model.RangeStart;
+	DateTime endDate = Model.RangeEnd;
 }
 @if (!Request.Browser.IsMobileDevice)
 {
@@ -24,10 +26,14 @@
                     </thead>
                     <tbody class="hourvalue">
                         <tr>
+							
                             @foreach (var value in Model.DailyCounters)
-                            {
-                                <td>@(value == 0 ? "-" : value.ToString())</td>
-                            }
+							{
+								   var  fromDate = startDate.Date;
+								   var ToDate = startDate.AddDays(1).Date;
+								  <td><button onclick="GetErrorsByDate(@fromDate,@ToDate)" >@(value == 0 ? "-" : value.ToString())</button></td>
+								   startDate = startDate.AddDays(1);
+							}
                         </tr>
                     </tbody>
                 </table>
@@ -76,8 +82,12 @@
                </tr>
         </thead>
         <tbody>
-            @Html.Action("Items", new { controller = "Logs", offset = 0, length = Model.SampleLogCount, truncValueLength = 60 })
-        </tbody>
+            @if (Model.SampleLogCount != 0)
+		      {
+				  @Html.Action("Items", new { controller = "Logs", offset = 0, length = Model.SampleLogCount, truncValueLength = 60 }) 
+			}
+		 
+		</tbody>
     </table>
     <div class="legend">@(Model.SampleLogCount) latest errors. <a href="@Url.Action("Index", "Logs")">See logs</a> for more.</div>
 </div>
@@ -105,9 +115,9 @@
 			<td>
 				<img src="@Url.Action("CreateBarDaily","Logs")" alt="Bar Chart using MVC" />
 			</td>
-			<td>
+			@*<td>
 				<img src="@Url.Action("CreateLineDaily","Logs")" alt="Pie Chart using MVC" />
-			</td>
+			</td>*@
 		</tr>
 
 	</table>

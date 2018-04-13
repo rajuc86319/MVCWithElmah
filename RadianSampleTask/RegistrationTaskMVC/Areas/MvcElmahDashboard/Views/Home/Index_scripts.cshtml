@@ -1,11 +1,13 @@
 @{
-    Layout = null;
-    Response.ContentType = "application/javascript";
-    Response.Cache.SetExpires(DateTime.Now.AddDays(30));
+	Layout = null;
+	Response.ContentType = "application/javascript";
+	Response.Cache.SetExpires(DateTime.Now.AddDays(30));
 }
+
 var hourlyOrDaily;
 var autoRefresh;
 var autoRefreshInterval;
+var textDate;
 var previousId;
 $(function () {
 
@@ -60,13 +62,21 @@ $(function () {
     $("BODY").on("click", "#siteDownDlg", function() {
         $(this).modal('hide');
     });
-
-    reloadContent();
-
+ 
+$(function() {
+			$('input[name="daterange"]').daterangepicker();   
+});	
+        reloadContent();
+   
 });
 
+
+
+
 var reloadContentTimerId = -1;
+
 function reloadContent() {
+    
     var url = (hourlyOrDaily == "h") ? "@(Url.Action("HourlyStats"))" : "@(Url.Action("DailyStats"))";
     var intervalSec = autoRefreshInterval;
     $(".loader").addClass("loading");
@@ -98,11 +108,50 @@ function reloadContent() {
         $("#siteDownDlg").modal('show');
     });
 }
+function reloadContentByDate(textDate) {
 
+    var url = "@(Url.Action("HourlyStats"))";
+	var intervalSec = autoRefreshInterval;
+	$(".loader").addClass("loading");
+	$(".content-header .timebar").css("animation", "none");
+	$(".content-header .timebar").css("-webkit-animation", "none");
+	$.ajax({
+	url: url,
+	cache: false,
+	timeout: 10000
+	})
+	.always(function() {
+	$(".loader").removeClass("loading");
+	if (autoRefresh == "1") {
+	setTimeout(function() {
+	$(".content-header .timebar").css("animation", "timebar-animation " + intervalSec + "s linear");
+	$(".content-header .timebar").css("-webkit-animation", "timebar-animation " + intervalSec + "s linear");
+	}, 50);
+	reloadContentTimerId = setTimeout(function() { reloadContent(); }, intervalSec * 1000);
+	} else {
+	reloadContentTimerId = -1;
+	}
+	})
+	.done(function (data, textStatus, jqXHR) {
+	$("#siteDownDlg").modal('hide');
+	$("#contentholder").html(data);
+	$("#contentholder").loaded();
+	})
+	.fail(function (jqXHR, textStatus, errorThrown) {
+	$("#siteDownDlg").modal('show');
+	});
+	}
 function stopContentReload() {
     $(".content-header .timebar").css("-webkit-animation", "none");
     $(".content-header .timebar").css("animation", "none");
     if (reloadContentTimerId != -1) clearTimeout(reloadContentTimerId);
+}
+
+
+function GetErrorsByDate()
+{
+textDate= document.getElementById("DateRange").value();
+reloadContentByDate(textDate);
 }
 
 function showHelp(i) {
@@ -124,6 +173,7 @@ function showHelp(i) {
 			}
 
 }
+
 
 function hideHelp(previousId)
    {

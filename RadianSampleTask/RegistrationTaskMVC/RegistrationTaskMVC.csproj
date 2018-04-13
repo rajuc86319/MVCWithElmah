@@ -217,12 +217,16 @@
       <DependentUpon>ELMAH.mdf</DependentUpon>
     </Content>
     <Content Include="App_Readme\Elmah.txt" />
+    <Content Include="Areas\css\bootstrap.css" />
+    <Content Include="Areas\css\daterangepicker.css" />
     <Content Include="Areas\Scripts\bootstrap.js" />
     <Content Include="Areas\Scripts\bootstrap.min.js" />
     <Content Include="Areas\MvcElmahDashboard\Views\Logs\CreateBar.cshtml" />
     <Content Include="Areas\MvcElmahDashboard\Views\Logs\CreatePie.cshtml" />
     <Content Include="Areas\MvcElmahDashboard\Views\Logs\CreateLine.cshtml" />
+    <Content Include="Areas\MvcElmahDashboard\Views\Home\GetErrorsByDate.cshtml" />
     <None Include="Areas\Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Areas\Scripts\daterangepicker.js" />
     <Content Include="Areas\Scripts\jquery-1.10.2.js" />
     <Content Include="Areas\Scripts\jquery-1.10.2.min.js" />
     <Content Include="Areas\Scripts\jquery.unobtrusive-ajax.js" />
@@ -233,6 +237,7 @@
     <Content Include="Areas\Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Areas\Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Areas\Scripts\modernizr-2.6.2.js" />
+    <Content Include="Areas\Scripts\moment.min.js" />
     <Content Include="Areas\Scripts\respond.js" />
     <Content Include="Areas\Scripts\respond.min.js" />
     <Content Include="Content\bootstrap.css" />
