@@ -17,7 +17,8 @@ namespace RegistrationTaskMVC.Controllers
 		// GET: Validation
 		public ActionResult Index()
         {
-            return View();
+			//done some chnages for testing 
+			return View();
         }
 	
 		/// <summary>
